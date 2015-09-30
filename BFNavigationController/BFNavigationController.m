@@ -35,7 +35,9 @@ static void * const BFNavigationController_navigationController = (void*)&BFNavi
 @implementation NSViewController (BFNavigationControllerMutability)
 
 -(void) setNavigationController:(BFNavigationController *)navigationController {
+    [self willChangeValueForKey:@"navigationController"];
     objc_setAssociatedObject(self, BFNavigationController_navigationController, navigationController, OBJC_ASSOCIATION_ASSIGN);
+    [self didChangeValueForKey:@"navigationController"];
 }
 
 @end
