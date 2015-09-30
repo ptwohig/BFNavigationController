@@ -330,7 +330,7 @@ static void * const BFNavigationController_navigationController = (void*)&BFNavi
         return [NSArray array];
     
     NSViewController *rootController = [_viewControllers objectAtIndex: 0];
-    [self.viewControllers removeObject: rootController];
+    [_viewControllers removeObject: rootController];
     
     // rearange popped controllers - like if you pop them one by one
     NSMutableArray *dispControllers = [NSMutableArray new];
@@ -338,7 +338,7 @@ static void * const BFNavigationController_navigationController = (void*)&BFNavi
         [dispControllers insertObject:controller atIndex:0];
     }
     
-    self.viewControllers = [NSMutableArray arrayWithObject:rootController];
+    _viewControllers = [NSMutableArray arrayWithObject:rootController];
     // Navigate
     [self _navigateFromViewController: [dispControllers firstObject] toViewController:rootController animated:animated push:NO];
 
