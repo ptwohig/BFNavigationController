@@ -349,16 +349,18 @@ static void * const BFNavigationController_navigationController = (void*)&BFNavi
     NSViewController *rootController = [_viewControllers objectAtIndex: 0];
     [_viewControllers removeObject: rootController];
 
-    NSRange poppedRange = NSMakeRange(1, [_viewControllers count] - 1);
-    NSArray *dispControllers = [_viewControllers subarrayWithRange:poppedRange];
-
-    _viewControllers = [NSMutableArray arrayWithObject: rootController];
-
     [self didChangeValueForKey:@"topViewController"];
     [self didChangeValueForKey:@"visibleViewController"];
     
+    // rearange popped controllers - like if you pop them one by one
+    NSMutableArray *dispControllers = [NSMutableArray new];
+    for ( id controller in self.viewControllers ) {
+        [dispControllers insertObject:controller atIndex:0];
+    }
+    
+    _viewControllers = [NSMutableArray arrayWithObject:rootController];
     // Navigate
-    [self _navigateFromViewController: [dispControllers lastObject] toViewController: rootController animated: animated push: NO];
+    [self _navigateFromViewController: [dispControllers firstObject] toViewController:rootController animated:animated push:NO];
 
     for (NSViewController * viewController in dispControllers) {
 
@@ -372,7 +374,7 @@ static void * const BFNavigationController_navigationController = (void*)&BFNavi
 
     // Return popping controller stack
     return dispControllers;
-
+    
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
