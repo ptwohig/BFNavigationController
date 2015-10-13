@@ -154,7 +154,9 @@ static void * const BFNavigationController_navigationController = (void*)&BFNavi
 
 -(void)setViewControllers: (NSArray *)viewControllers animated: (BOOL)animated
 {
+    [self willChangeValueForKey:@"viewControllers"];
     [self _setViewControllers: viewControllers animated: animated];
+    [self didChangeValueForKey:@"viewControllers"];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -282,8 +284,14 @@ static void * const BFNavigationController_navigationController = (void*)&BFNavi
 -(void)pushViewController: (NSViewController *)viewController animated: (BOOL)animated
 {
 
+    [self willChangeValueForKey:@"topViewController"];
+    [self willChangeValueForKey:@"visibleViewController"];
+
     NSViewController *visibleController = self.visibleViewController;
     [_viewControllers addObject: viewController];
+
+    [self didChangeValueForKey:@"topViewController"];
+    [self didChangeValueForKey:@"visibleViewController"];
 
     viewController.navigationController = self;
 
@@ -304,9 +312,15 @@ static void * const BFNavigationController_navigationController = (void*)&BFNavi
     if([_viewControllers count] == 1)
         return nil;
     
+    [self willChangeValueForKey:@"topViewController"];
+    [self willChangeValueForKey:@"visibleViewController"];
+
     NSViewController *controller = [_viewControllers lastObject];
     [_viewControllers removeLastObject];
-    
+
+    [self didChangeValueForKey:@"topViewController"];
+    [self didChangeValueForKey:@"visibleViewController"];
+
     // Navigate
     [self _navigateFromViewController: controller toViewController: [_viewControllers lastObject] animated: animated push: NO];
 
@@ -328,14 +342,20 @@ static void * const BFNavigationController_navigationController = (void*)&BFNavi
     // Don't pop last controller
     if([_viewControllers count] == 1)
         return [NSArray array];
-    
+
+    [self willChangeValueForKey:@"topViewController"];
+    [self willChangeValueForKey:@"visibleViewController"];
+
     NSViewController *rootController = [_viewControllers objectAtIndex: 0];
     [_viewControllers removeObject: rootController];
-    
+
     NSRange poppedRange = NSMakeRange(1, [_viewControllers count] - 1);
     NSArray *dispControllers = [_viewControllers subarrayWithRange:poppedRange];
 
     _viewControllers = [NSMutableArray arrayWithObject: rootController];
+
+    [self didChangeValueForKey:@"topViewController"];
+    [self didChangeValueForKey:@"visibleViewController"];
     
     // Navigate
     [self _navigateFromViewController: [dispControllers lastObject] toViewController: rootController animated: animated push: NO];
@@ -364,13 +384,19 @@ static void * const BFNavigationController_navigationController = (void*)&BFNavi
     // Don't pop last controller
     if(![_viewControllers containsObject: viewController] || visibleController == viewController)
         return [NSArray array];
-    
+
+    [self willChangeValueForKey:@"topViewController"];
+    [self willChangeValueForKey:@"visibleViewController"];
+
     NSUInteger index = [_viewControllers indexOfObject: viewController];
     NSUInteger length = [_viewControllers count] - (index + 1);
     NSRange range = NSMakeRange(index + 1, length);
     NSArray *dispControllers = [_viewControllers subarrayWithRange: range];
     [_viewControllers removeObjectsInArray: dispControllers];
     
+    [self didChangeValueForKey:@"topViewController"];
+    [self didChangeValueForKey:@"visibleViewController"];
+
     // Navigate
     [self _navigateFromViewController: visibleController toViewController: viewController animated: animated push: NO];
 
