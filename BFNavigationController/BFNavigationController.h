@@ -6,6 +6,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "NSViewController+BFNavigationController.h"
 
 @class BFNavigationController;
 
