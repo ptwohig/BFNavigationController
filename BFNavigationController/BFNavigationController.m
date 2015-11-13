@@ -155,8 +155,12 @@ static void * const BFNavigationController_navigationController = (void*)&BFNavi
 -(void)setViewControllers: (NSArray *)viewControllers animated: (BOOL)animated
 {
     [self willChangeValueForKey:@"viewControllers"];
+    [self willChangeValueForKey:@"topViewController"];
+    [self willChangeValueForKey:@"visibleViewController"];
     [self _setViewControllers: viewControllers animated: animated];
     [self didChangeValueForKey:@"viewControllers"];
+    [self didChangeValueForKey:@"topViewController"];
+    [self didChangeValueForKey:@"visibleViewController"];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
